@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
@@ -11,38 +10,33 @@ using Windows.Storage.Pickers;
 
 public class VRMRuntimeLoaderUsingFilePicker : MonoBehaviour
 {
+	public GameObject VRMRoot;
+
 	void Start ()
 	{
 #if !UNITY_EDITOR && UNITY_WSA_10_0
-		Debug.Log("***********************************");
-		Debug.Log("File Picker start.");
-		Debug.Log("***********************************");
 
 		UnityEngine.WSA.Application.InvokeOnUIThread(async () =>
 		{
-			var filepicker = new FileOpenPicker();
-			filepicker.FileTypeFilter.Add("*");
-			filepicker.FileTypeFilter.Add(".vrm");
+			var openPicker = new FileOpenPicker();
+			openPicker.SuggestedStartLocation = PickerLocationId.Objects3D;
+			openPicker.FileTypeFilter.Add(".vrm");
 
-			var file = await filepicker.PickSingleFileAsync();
+			var file = await openPicker.PickSingleFileAsync();
 			UnityEngine.WSA.Application.InvokeOnAppThread(() => 
 			{
-				Debug.Log("***********************************");
-				string name = (file != null) ? file.Name : "No data";
-				Debug.Log("Name: " + name);
-				Debug.Log("***********************************");
-				string path = (file != null) ? file.Path : "No data";
-				Debug.Log("Path: " + path);
-				Debug.Log("***********************************");
-
-				StartCoroutine(LoadVrmCoroutine(path));
-
+				if(file != null)
+				{
+					StartCoroutine(LoadVrmCoroutine(file.Path));
+				}
 			}, false);
 		}, false);
 
-		Debug.Log("***********************************");
-		Debug.Log("File Picker end.");
-		Debug.Log("***********************************");
+#elif UNITY_EDITOR
+
+		string path = Application.dataPath + "/Models/" + "default.vrm";
+		StartCoroutine(LoadVrmCoroutine(path));
+
 #endif
 	}
 
@@ -53,8 +47,11 @@ public class VRMRuntimeLoaderUsingFilePicker : MonoBehaviour
 		VRM.VRMImporter.LoadVrmAsync(www.bytes, OnLoaded);
 	}
 
-	void OnLoaded(GameObject go)
+	void OnLoaded(GameObject vrm)
 	{
-
+		if(VRMRoot != null)
+		{
+			vrm.transform.SetParent(VRMRoot.transform, false);
+		}
 	}
 }

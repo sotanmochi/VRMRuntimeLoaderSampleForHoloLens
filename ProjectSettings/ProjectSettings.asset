@@ -567,7 +567,7 @@ PlayerSettings:
   metroCertificatePassword: 
   metroCertificateSubject: DefaultCompany
   metroCertificateIssuer: DefaultCompany
-  metroCertificateNotAfter: 00ce82abae69d501
+  metroCertificateNotAfter: 800b1343056ad501
   metroApplicationDescription: VRMRuntimeLoaderSampleForHoloLens
   wsaImages: {}
   metroTileShortName: 
