@@ -11,7 +11,7 @@
 - Visual Studio 2017
 - HoloLens RS5 Preview (OS Build: 17720.1000)
 
-## 3rd party assets
+## Third party assets
 - [UniVRM v0.43](https://github.com/dwango/UniVRM/releases/tag/v0.43)  
 Licensed under the MIT License.
 Copyright (c) DWANGO Co., Ltd.  
