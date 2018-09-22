@@ -17,6 +17,18 @@ public class VRMRuntimeLoaderUsingFilePicker : MonoBehaviour
 	UniHumanoid.HumanPoseTransfer m_target;
 	UniHumanoid.HumanPoseTransfer m_source;
 
+	public void UpdateVRMRootPosition(RaycastHit hitInfo)
+	{
+		if(Vector3.Dot(hitInfo.normal, Vector3.up) > 0.95f)
+		{
+			VRMRoot.transform.position = hitInfo.point;
+
+			Vector3 direction = Camera.main.transform.position - hitInfo.point;
+			direction = Vector3.Cross(Vector3.Cross(transform.up, direction), transform.up); // up方向成分の除去
+			VRMRoot.transform.forward = direction;
+		}
+	}
+
 	public void LoadVrmUsingFilePicker()
     {
 #if !UNITY_EDITOR && UNITY_WSA_10_0
@@ -36,6 +48,14 @@ public class VRMRuntimeLoaderUsingFilePicker : MonoBehaviour
 				}
 			}, false);
 		}, false);
+
+#elif UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+
+		var path = VRM.FileDialogForWindows.FileDialog("open VRM", ".vrm");
+		if (!string.IsNullOrEmpty(path))
+		{
+			StartCoroutine(LoadVrmCoroutine(path));
+		}
 
 #elif UNITY_EDITOR
 
@@ -64,6 +84,14 @@ public class VRMRuntimeLoaderUsingFilePicker : MonoBehaviour
 				}
 			}, false);
 		}, false);
+
+#elif UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+
+		var path = VRM.FileDialogForWindows.FileDialog("open BVH", ".bvh");
+		if (!string.IsNullOrEmpty(path))
+		{
+			StartCoroutine(LoadBvhCoroutine(path));
+		}
 
 #elif UNITY_EDITOR
 
